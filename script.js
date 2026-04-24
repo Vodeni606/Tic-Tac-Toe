@@ -8,10 +8,15 @@ let gameBoard = (function(){
         
     }
 
-    return {
+    return {    
         updateBoard: function(row,column,player){
-            board[row][column] = player;
-
+            if (board[row][column] === '#'){
+                board[row][column] = player;
+                return true;
+            }else {
+                return false;
+            }
+            
         },
         displayBoard: function(){
             for (let i = 0; i < 3; i++){
@@ -38,13 +43,27 @@ let gameController = (function(){
     const player2 = player("Mark","O")
 
     let start = player1;
+    let gameActive = true;
+
+    function endGame(winner) {
+    console.log(`${winner} has won`);
+    gameActive = false;
+    }
 
     return {
         turn: function(row,column){
-            gameBoard.updateBoard(row,column,start.playermark);
-            this.winCondition();
-            this.tieCondition();
-            this.switchTurn();
+            if (gameActive === false){
+                return;
+            }
+            const validMove = gameBoard.updateBoard(row,column,start.playermark);
+            if (validMove){
+                this.winCondition();
+                this.tieCondition();
+                this.switchTurn();
+            }else{
+
+            }
+            
         },
         switchTurn: function(){
             if (start === player1){
@@ -56,22 +75,23 @@ let gameController = (function(){
         winCondition: function(){
             const board = gameBoard.getBoard();
             if (board[0][0] === board[0][1] && board[0][1] === board[0][2] && board[0][0] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board [0][0] !== '#'){
-                console.log(`${start.playername} has won`)
+                endGame(start.playermark)
             }if (board[1][0] === board[1][1] && board[1][1] === board[1][2] && board[1][0] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }if (board[2][0] === board[2][1] && board[2][1] === board[2][2] && board[2][0] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }if (board[0][0] === board[1][0] && board[1][0] === board[2][0] && board[0][0] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }if (board[0][1] === board[1][1] && board[1][1] === board[2][1] && board[0][1] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }if (board[0][2] === board[1][2] && board[1][2] === board[2][2] && board[0][2] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '#'){
-                console.log(`${start.playername} has won`);
+                endGame(start.playermark);
             }
+
         },
         tieCondition: function(){
             const board = gameBoard.getBoard();
@@ -83,9 +103,11 @@ let gameController = (function(){
                 }
             }
             console.log("Its a tie");
+            gameActive = false;
         }
     }
 })();
+
 
 
 gameController.turn(0, 0); // X
@@ -93,4 +115,5 @@ gameController.turn(1, 0); // O
 gameController.turn(0, 1); // X
 gameController.turn(1, 1); // O
 gameController.turn(0, 2); // X wins!
+gameController.turn(2, 2); // should not work!
 gameBoard.displayBoard();
