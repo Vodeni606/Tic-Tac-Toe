@@ -1,0 +1,43 @@
+.body {
+   display: grid;
+}
+
+.game-container {
+    display: none;
+}
+
+
+header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+header h1{
+    grid-column: 2/3;
+    text-align: center;
+}
+
+.setup-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+}
+
+.setup-card {
+    grid-column: 2/3;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 300px;
+}
+
+.square {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+
+.winner {
+    display: none;
+}

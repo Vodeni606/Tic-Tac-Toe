@@ -116,16 +116,38 @@ let gameController = (function(){
             gameBoard.resetBoard();
             gameActive = true;
             start = player1;
+        },
+        getCurrentPlayer: function(){
+            return start;
         }
     }
 })();
 
 
 
-gameController.turn(0, 0); // X
-gameController.turn(1, 0); // O
-gameController.turn(0, 1); // X
-gameController.turn(1, 1); // O
-gameController.turn(0, 2); // X wins!
-gameController.turn(2, 2); // should not work!
-gameBoard.displayBoard();
+
+let displayController = (function(){
+    let square = document.querySelectorAll('.square');
+    let setup = document.querySelector('.setup-container');
+    let game = document.querySelector('.game-container');
+    let button = document.querySelector('button');
+    let winner = document.querySelector('.winner')
+
+    button.addEventListener('click', function(){
+        setup.style.display = 'none';
+        game.style.display = 'block';
+    })
+    
+    for ( let i = 0; i < square.length; i++){
+        square[i].addEventListener('click',function(event){
+            let currentPlayer = gameController.getCurrentPlayer();
+            event.target.textContent = currentPlayer.playermark;
+            gameController.turn(event.target.dataset.row,event.target.dataset.column)
+
+
+        })
+    }
+
+
+})();
+
