@@ -24,6 +24,13 @@ let gameBoard = (function(){
             }
         },
         resetBoard: function(){
+            board = [[],[],[]];
+            for (let i = 0;i < 3;i++){
+                for (let j = 0; j <3; j++){
+                    board[i].push('#');
+                }   
+        
+            }
         },
         getBoard : function(){
             return board;
@@ -104,6 +111,11 @@ let gameController = (function(){
             }
             console.log("Its a tie");
             gameActive = false;
+        },
+        resetGame: function(){
+            gameBoard.resetBoard();
+            gameActive = true;
+            start = player1;
         }
     }
 })();
