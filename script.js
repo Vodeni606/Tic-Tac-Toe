@@ -53,7 +53,7 @@ let gameController = (function(){
     let gameActive = true;
 
     function endGame(winner) {
-    console.log(`${winner} has won`);
+    displayController.showWinner(winner);
     gameActive = false;
     }
 
@@ -67,9 +67,11 @@ let gameController = (function(){
                 this.winCondition();
                 this.tieCondition();
                 this.switchTurn();
+                return true;
             }else{
+                return false;
 
-            }
+            }   
             
         },
         switchTurn: function(){
@@ -109,7 +111,7 @@ let gameController = (function(){
                     }
                 }
             }
-            console.log("Its a tie");
+            displayController.showTie();
             gameActive = false;
         },
         resetGame: function(){
@@ -119,7 +121,7 @@ let gameController = (function(){
         },
         getCurrentPlayer: function(){
             return start;
-        }
+        }   
     }
 })();
 
@@ -131,7 +133,8 @@ let displayController = (function(){
     let setup = document.querySelector('.setup-container');
     let game = document.querySelector('.game-container');
     let button = document.querySelector('button');
-    let winner = document.querySelector('.winner')
+    let winner = document.querySelector('.winner');
+    let tie = document.querySelector('.tie');
 
     button.addEventListener('click', function(){
         setup.style.display = 'none';
@@ -141,13 +144,27 @@ let displayController = (function(){
     for ( let i = 0; i < square.length; i++){
         square[i].addEventListener('click',function(event){
             let currentPlayer = gameController.getCurrentPlayer();
-            event.target.textContent = currentPlayer.playermark;
-            gameController.turn(event.target.dataset.row,event.target.dataset.column)
+            const validMove = gameController.turn(event.target.dataset.row,event.target.dataset.column);
+            if (validMove){
+                event.target.textContent = currentPlayer.playermark;
+            }
+
 
 
         })
     }
 
+    return {
+        showWinner: function(name){
+            winner.textContent =  `${name} has won`;
+            winner.style.display = 'block';
+        },
+        showTie: function(){
+            winner.textContent = "Its a tie";
+            winner.style.display = 'block';
+
+        }
+    }
 
 })();
 
