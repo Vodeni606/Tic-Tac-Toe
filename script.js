@@ -57,8 +57,8 @@ let player = function(name,mark){
 //  The brain of the game, handles all logic
 let gameController = (function(){
     // Create two players with hardcoded names for now
-    const player1 = player("John","X")
-    const player2 = player("Mark","O")
+    let player1 = player("John","X")
+    let player2 = player("Mark","O")
 
     // Tracks whose turn it is - starts with player1
     let start = player1;
@@ -67,10 +67,19 @@ let gameController = (function(){
     // Set to false when someone wins or ties
     let gameActive = true;
 
+    // Keeping score
+    let scorePlayer1 = 0;
+    let scorePlayer2 = 0;
+
     // Private function - runs when game is over
     // Tells displayController to show the winner and stops the game
-    function endGame(winner) {
-        displayController.showWinner(winner);
+    function endGame(name,mark) {
+        if (mark ===player1.playermark){
+            scorePlayer1 += 1;
+        }else{
+            scorePlayer2 +=1;
+        }
+        displayController.showWinner(name);
         gameActive = false;
     }
 
@@ -106,28 +115,28 @@ let gameController = (function(){
         winCondition: function(){
             const board = gameBoard.getBoard();
             if (board[0][0] === board[0][1] && board[0][1] === board[0][2] && board[0][0] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
             if (board[0][0] === board[1][1] && board[1][1] === board[2][2] && board[0][0] !== '#'){
-                endGame(start.playermark)
+                endGame(start.playername,start.playermark)
             }
             if (board[1][0] === board[1][1] && board[1][1] === board[1][2] && board[1][0] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
             if (board[2][0] === board[2][1] && board[2][1] === board[2][2] && board[2][0] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
             if (board[0][0] === board[1][0] && board[1][0] === board[2][0] && board[0][0] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
             if (board[0][1] === board[1][1] && board[1][1] === board[2][1] && board[0][1] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
             if (board[0][2] === board[1][2] && board[1][2] === board[2][2] && board[0][2] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
             if (board[0][2] === board[1][1] && board[1][1] === board[2][0] && board[0][2] !== '#'){
-                endGame(start.playermark);
+                endGame(start.playername,start.playermark);
             }
         },
 
@@ -154,7 +163,20 @@ let gameController = (function(){
         // Exposes the current player object so displayController can use it
         getCurrentPlayer: function(){
             return start;
-        }   
+        },
+
+        // Gets current score so we can display it after
+        getCurrentScore: function(){
+            return{
+                player1: scorePlayer1,
+                player2: scorePlayer2
+            }
+        },
+        setPlayerName: function(name1,name2){
+            player1 = player(name1,"X");
+            player2 = player(name2,'O');
+            start = player1;
+        }
     }
 })();
 
@@ -165,12 +187,31 @@ let displayController = (function(){
     let setup = document.querySelector('.setup-container'); 
     let game = document.querySelector('.game-container');   
     let button = document.querySelector('button');          
-    let winner = document.querySelector('.winner');         
+    let winner = document.querySelector('.winner');
+    let reset = document.querySelector('.reset');
+    let player1Score = document.querySelector('.player1');         
+    let player2Score = document.querySelector('.player2');
+    let player1Name = document.querySelector('#player1-input');
+    let player2Name = document.querySelector('#player2-input');
+    let player1Points = document.querySelector('.player1-points');
+    let player2Points = document.querySelector('.player2-points');
+    let player1NameDisplay = document.querySelector('.player1-name');
+    let player2NameDisplay = document.querySelector('.player2-name');
 
     // When START GAME is clicked, switch from setup screen to game screen
     button.addEventListener('click', function(){
+        gameController.setPlayerName(player1Name.value,player2Name.value);
+        player1NameDisplay.textContent = player1Name.value;
+        player2NameDisplay.textContent = player2Name.value;
         setup.style.display = 'none';  // hide the setup screen
         game.style.display = 'block';  // show the game board
+    })
+
+    reset.addEventListener('click',function(){
+        for (let i = 0; i < square.length; i++){
+            square[i].textContent = ''
+        }
+        gameController.resetGame();
     })
     
     // Add a click listener to each of the 9 squares
@@ -191,6 +232,9 @@ let displayController = (function(){
     return {
         // Shows winner message on the page
         showWinner: function(name){
+            const scores = gameController.getCurrentScore()
+            player1Points.textContent = scores.player1;
+            player2Points.textContent = scores.player2;
             winner.textContent = `${name} has won`;
             winner.style.display = 'block';
         },

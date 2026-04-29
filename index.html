@@ -14,8 +14,8 @@
 
     <div class="setup-container">
         <div class="setup-card">
-            <input type="text" placeholder="Enter player 1 name">
-            <input type="text" placeholder="Enter player 2 name">
+            <input type="text" id="player1-input" placeholder="Enter player 1 name">
+            <input type="text" id="player2-input" placeholder="Enter player 2 name">
             <button>START GAME</button>
         </div>
     </div>
@@ -44,6 +44,17 @@
             <div class="winner">
                 <h3>Player has Won</h3>
             </div>
+        <div class="score">
+            <div class="player1">
+                <p class="player1-name"></p>
+                <p class="player1-points"></p>
+            </div>
+            <div class="player2">
+                <p class="player2-name"></p>
+                <p class="player2-points"></p>
+            </div>
+        </div>
+        <button class="reset">Reset</button>
             
     </div>
     <script src="script.js"></script>
