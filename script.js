@@ -67,6 +67,8 @@ let gameController = (function(){
     // Set to false when someone wins or ties
     let gameActive = true;
 
+    let nextStarter = null;
+
     // Keeping score
     let scorePlayer1 = 0;
     let scorePlayer2 = 0;
@@ -76,8 +78,10 @@ let gameController = (function(){
     function endGame(name,mark) {
         if (mark ===player1.playermark){
             scorePlayer1 += 1;
+            nextStarter = player2;
         }else{
             scorePlayer2 +=1;
+            nextStarter = player1;
         }
         displayController.showWinner(name);
         gameActive = false;
@@ -157,7 +161,7 @@ let gameController = (function(){
         resetGame: function(){
             gameBoard.resetBoard(); 
             gameActive = true;      // game is active again
-            start = player1;        
+            start = nextStarter;        
         },
 
         // Exposes the current player object so displayController can use it
